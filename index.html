@@ -1029,8 +1029,9 @@ function submitScore() {
 function initDisplay() {
   showScreen("display");
 
-  // QR code → quiz URL (strip ?display=true)
-  const quizURL = window.location.href.replace(/([?&])display=true(&|$)/, '$1').replace(/[?&]$/, '');
+  // QR code → quiz URL (base URL + ?quiz=true)
+  const base = window.location.href.split('?')[0];
+  const quizURL = base + '?quiz=true';
   new QRCode(document.getElementById("qrcode"), {
     text: quizURL, width: 190, height: 190,
     colorDark:"#1a1a2e", colorLight:"#ffffff",
@@ -1116,10 +1117,12 @@ function confetti() {
 }
 
 // ══════════════════════════════════════════════════════
-//  INIT — route by ?display param
+//  INIT — leaderboard by default; ?quiz=true → quiz
 // ══════════════════════════════════════════════════════
-if (new URLSearchParams(window.location.search).get("display") === "true") {
-  initDisplay();
+if (new URLSearchParams(window.location.search).get("quiz") === "true") {
+  // quiz mode — welcome screen already active by default
+} else {
+  initDisplay(); // default = leaderboard
 }
 </script>
 </body>
