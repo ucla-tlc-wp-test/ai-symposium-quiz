@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Spot the Hallucination – AI Symposium</title>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+<!-- QR Code -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { font-size: 18px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #f0f2f5;
+  color: #111;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Focus styles for keyboard accessibility */
+:focus-visible {
+  outline: 3px solid #e0b84e;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Screen system ── */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ════════════════════════════════
+   WELCOME SCREEN
+════════════════════════════════ */
+#screen-welcome {
+  background: linear-gradient(150deg, #1a1a2e 0%, #16213e 55%, #0f3460 100%);
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+}
+.welcome-card {
+  background: rgba(255,255,255,.09);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 24px;
+  padding: 36px 28px;
+  width: 100%;
+  max-width: 420px;
+}
+.welcome-logo { font-size: 52px; text-align: center; margin-bottom: 10px; }
+.welcome-title {
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 4px;
+}
+.welcome-sub {
+  color: rgba(255,255,255,.55);
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.info-box {
+  background: rgba(255,255,255,.07);
+  border-left: 4px solid #e0b84e;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+}
+.info-box p {
+  color: rgba(255,255,255,.8);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+.info-box p:last-child { margin: 0; }
+.info-box strong { color: #e0b84e; }
+
+label {
+  display: block;
+  color: rgba(255,255,255,.75);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+input[type=text], input[type=email] {
+  width: 100%;
+  background: rgba(255,255,255,.12);
+  border: 2px solid rgba(255,255,255,.22);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 1.05rem;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  outline: none;
+  transition: border .2s;
+}
+input[type=text]:focus, input[type=email]:focus { border-color: #e0b84e; }
+input::placeholder { color: rgba(255,255,255,.35); }
+
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, #e0b84e, #f0a500);
+  border: none;
+  border-radius: 14px;
+  color: #1a1a2e;
+  font-size: 1.1rem;
+  font-weight: 800;
+  padding: 18px;
+  cursor: pointer;
+  letter-spacing: .2px;
+  transition: transform .1s, opacity .2s;
+  min-height: 56px;
+}
+.btn-primary:active { transform: scale(.97); }
+.btn-primary:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+
+/* ════════════════════════════════
+   QUIZ SCREEN
+════════════════════════════════ */
+#screen-quiz { background: #f0f2f5; }
+
+.quiz-header {
+  background: #fff;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 2px solid #e8e8e8;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 10px rgba(0,0,0,.07);
+}
+.quiz-qnum {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #333;
+  white-space: nowrap;
+  min-width: 60px;
+}
+.progress-track {
+  flex: 1;
+  background: #e0e0e0;
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #e0b84e, #f0a500);
+  border-radius: 999px;
+  transition: width .4s ease;
+}
+.progress-pct {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #666;
+  white-space: nowrap;
+  min-width: 38px;
+  text-align: right;
+}
+
+.quiz-body { padding: 20px 18px; flex: 1; max-width: 600px; margin: 0 auto; width: 100%; }
+
+/* Section badge */
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+/* Passage */
+.passage-card {
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border-left: 5px solid currentColor;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+/* Part header */
+.part-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  margin-top: 4px;
+}
+.part-num {
+  background: #1a1a2e;
+  color: #fff;
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+.part-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #222;
+}
+
+/* Options */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.opt-btn {
+  background: #fff;
+  border: 2.5px solid #d0d0d0;
+  border-radius: 14px;
+  padding: 15px 16px;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all .15s;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  position: relative;
+}
+.opt-btn:active { transform: scale(.98); }
+.opt-btn.selected { background: var(--sec-bg); border-color: var(--sec-color); }
+.opt-key {
+  background: #e8e8e8;
+  color: #444;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all .15s;
+}
+.opt-btn.selected .opt-key {
+  background: var(--sec-color);
+  color: #fff;
+}
+.opt-text { font-size: 1rem; line-height: 1.5; color: #111; }
+.opt-subtext { font-size: 0.85rem; color: #666; margin-top: 2px; }
+
+/* Type options show subtext */
+.opt-btn.type-opt { align-items: flex-start; }
+
+/* Next button */
+.btn-next {
+  width: 100%;
+  background: #1a1a2e;
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 18px;
+  cursor: pointer;
+  transition: all .15s;
+  min-height: 56px;
+  margin-top: 8px;
+}
+.btn-next:active { transform: scale(.98); opacity: .9; }
+.btn-next:disabled { opacity: .3; cursor: not-allowed; transform: none; }
+
+/* Divider */
+.part-divider {
+  border: none;
+  border-top: 2px dashed #e0e0e0;
+  margin: 8px 0 24px;
+}
+
+/* ════════════════════════════════
+   RESULTS SCREEN
+════════════════════════════════ */
+#screen-results {
+  background: linear-gradient(150deg, #1a1a2e 0%, #16213e 55%, #0f3460 100%);
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+}
+.results-card {
+  background: rgba(255,255,255,.09);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 24px;
+  padding: 36px 28px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+.results-emoji { font-size: 60px; margin-bottom: 10px; }
+.results-name { color: rgba(255,255,255,.65); font-size: 1rem; margin-bottom: 6px; }
+.results-score { color: #e0b84e; font-size: 5rem; font-weight: 900; line-height: 1; }
+.results-denom { color: rgba(255,255,255,.45); font-size: 1.2rem; margin-bottom: 6px; }
+.results-pct { color: #fff; font-size: 1rem; margin-bottom: 24px; }
+
+.breakdown-box {
+  background: rgba(255,255,255,.06);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+.breakdown-box h3 {
+  color: rgba(255,255,255,.5);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+.breakdown-row:last-child { margin: 0; }
+.b-label { color: rgba(255,255,255,.75); }
+.b-val { font-weight: 800; }
+
+.btn-submit {
+  width: 100%;
+  background: linear-gradient(135deg, #e0b84e, #f0a500);
+  border: none;
+  border-radius: 14px;
+  color: #1a1a2e;
+  font-size: 1.05rem;
+  font-weight: 800;
+  padding: 18px;
+  cursor: pointer;
+  margin-bottom: 14px;
+  transition: all .15s;
+  min-height: 56px;
+}
+.btn-submit:active { transform: scale(.97); }
+.btn-submit:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+.submit-msg { color: rgba(255,255,255,.6); font-size: 0.95rem; min-height: 22px; }
+
+/* ════════════════════════════════
+   DISPLAY SCREEN
+════════════════════════════════ */
+#screen-display {
+  background: #080818;
+  color: #fff;
+  min-height: 100vh;
+  padding: 0;
+}
+.display-wrap {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: 100vh;
+}
+@media (max-width: 800px) {
+  .display-wrap {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+}
+
+.display-left {
+  background: linear-gradient(160deg, #1a1a2e, #0f3460);
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.d-eyebrow { color: #e0b84e; font-size: 0.8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; text-align: center; }
+.d-title { color: #fff; font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 28px; line-height: 1.3; }
+#qrcode-wrap {
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 20px;
+  display: inline-flex;
+}
+.d-scan { color: rgba(255,255,255,.6); font-size: 1rem; text-align: center; line-height: 1.6; margin-bottom: 24px; }
+.d-stats { display: flex; gap: 14px; }
+.stat-tile {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 14px 18px;
+  text-align: center;
+  min-width: 72px;
+}
+.stat-num { color: #e0b84e; font-size: 1.6rem; font-weight: 900; }
+.stat-lbl { color: rgba(255,255,255,.45); font-size: 0.78rem; margin-top: 2px; }
+
+.display-right {
+  padding: 28px 36px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 800px) {
+  .display-right { padding: 20px 18px; }
+}
+
+.lb-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.lb-heading { color: #fff; font-size: 1.4rem; font-weight: 800; }
+.live-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(34,197,94,.12);
+  border: 1px solid rgba(34,197,94,.3);
+  border-radius: 999px;
+  padding: 5px 12px;
+  color: #22c55e;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.live-dot {
+  width: 8px; height: 8px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+.lb-table { width: 100%; border-collapse: collapse; }
+.lb-table th {
+  color: rgba(255,255,255,.35);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.lb-table td { padding: 12px 12px; border-bottom: 1px solid rgba(255,255,255,.05); vertical-align: middle; }
+
+.rank-cell { width: 48px; }
+.rank-num { font-size: 1.1rem; font-weight: 800; color: rgba(255,255,255,.4); }
+.rank-medal { font-size: 1.5rem; }
+
+.name-cell .lb-name { color: #fff; font-size: 1rem; font-weight: 600; }
+.name-cell .lb-bar-wrap { background: rgba(255,255,255,.08); border-radius: 999px; height: 5px; margin-top: 5px; }
+.name-cell .lb-bar { height: 100%; border-radius: 999px; background: linear-gradient(90deg,#e0b84e,#f0a500); transition: width .6s; }
+
+.score-cell { text-align: right; }
+.lb-pts { color: #e0b84e; font-size: 1.2rem; font-weight: 900; }
+.lb-max { color: rgba(255,255,255,.3); font-size: 0.85rem; font-weight: 400; }
+
+.lb-empty { color: rgba(255,255,255,.3); text-align: center; padding: 48px 20px; font-size: 1rem; }
+.lb-footer { color: rgba(255,255,255,.2); font-size: 0.8rem; text-align: right; margin-top: 14px; }
+
+/* ════════════════════════════════
+   CONFETTI
+════════════════════════════════ */
+#confetti-layer {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 9999;
+}
+.cp {
+  position: absolute;
+  animation: fall 3s ease-in forwards;
+  border-radius: 2px;
+}
+@keyframes fall {
+  0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+  100% { transform: translateY(105vh) rotate(900deg); opacity: 0; }
+}
+
+/* ════════════════════════════════
+   UTILITY
+════════════════════════════════ */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ WELCOME ══════════ -->
+<div id="screen-welcome" class="screen active" role="main">
+  <div class="welcome-card">
+    <div class="welcome-logo" aria-hidden="true">🔍</div>
+    <h1 class="welcome-title">Spot the Hallucination</h1>
+    <p class="welcome-sub">AI Symposium &nbsp;•&nbsp; Table 3</p>
+
+    <div class="info-box" role="note">
+      <p>Each question has a short passage with <strong>one hallucination</strong> hidden inside.</p>
+      <p>Identify <strong>what's wrong</strong> and <strong>what type</strong> of hallucination it is.</p>
+      <p><strong>10 questions &nbsp;•&nbsp; 20 points total &nbsp;•&nbsp; Top score wins! 🏆</strong></p>
+    </div>
+
+    <label for="inp-name">Your Name</label>
+    <input type="text" id="inp-name" placeholder="e.g. Jane Smith"
+           autocomplete="name" autocorrect="off" spellcheck="false"
+           oninput="checkForm()">
+
+    <label for="inp-email">Email Address</label>
+    <input type="email" id="inp-email" placeholder="e.g. jane@ucla.edu"
+           autocomplete="email" autocorrect="off" spellcheck="false"
+           oninput="checkForm()">
+
+    <button class="btn-primary" id="btn-start" onclick="startQuiz()" disabled aria-label="Start the quiz">
+      Start Quiz &rarr;
+    </button>
+  </div>
+</div>
+
+<!-- ══════════ QUIZ ══════════ -->
+<div id="screen-quiz" class="screen" role="main" aria-label="Quiz">
+  <header class="quiz-header">
+    <span class="quiz-qnum" id="qnum-label" aria-live="polite" aria-atomic="true">Q 1 / 10</span>
+    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="prog-bar-wrap">
+      <div class="progress-fill" id="prog-fill" style="width:10%"></div>
+    </div>
+    <span class="progress-pct" id="prog-pct" aria-hidden="true">10%</span>
+  </header>
+  <div class="quiz-body" id="quiz-body"></div>
+</div>
+
+<!-- ══════════ RESULTS ══════════ -->
+<div id="screen-results" class="screen" role="main" aria-label="Results">
+  <div class="results-card">
+    <div class="results-emoji" id="res-emoji" aria-hidden="true">🎉</div>
+    <p class="results-name" id="res-name"></p>
+    <div class="results-score" id="res-score" aria-label="Score">--</div>
+    <p class="results-denom">/ 20 points</p>
+    <p class="results-pct" id="res-pct"></p>
+    <div class="breakdown-box">
+      <h3>Score by Section</h3>
+      <div id="res-breakdown"></div>
+    </div>
+    <button class="btn-submit" id="btn-submit" onclick="submitScore()">
+      Submit to Leaderboard 🏆
+    </button>
+    <p class="submit-msg" id="submit-msg" aria-live="polite"></p>
+  </div>
+</div>
+
+<!-- ══════════ DISPLAY (Leaderboard) ══════════ -->
+<div id="screen-display" class="screen" role="main" aria-label="Leaderboard">
+  <div class="display-wrap">
+    <aside class="display-left" aria-label="Quiz info and QR code">
+      <p class="d-eyebrow">AI Symposium &nbsp;•&nbsp; Table 3</p>
+      <h1 class="d-title">Spot the<br>Hallucination 🔍</h1>
+      <div id="qrcode-wrap" aria-label="QR code to join quiz"><div id="qrcode"></div></div>
+      <p class="d-scan">📱 Scan with your phone<br>to take the quiz</p>
+      <div class="d-stats" aria-label="Live stats">
+        <div class="stat-tile">
+          <div class="stat-num" id="stat-players" aria-label="Number of players">0</div>
+          <div class="stat-lbl">Players</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-num" id="stat-avg" aria-label="Average score">—</div>
+          <div class="stat-lbl">Avg Score</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-num" id="stat-top" aria-label="Top score">—</div>
+          <div class="stat-lbl">Top Score</div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="display-right" aria-label="Leaderboard">
+      <div class="lb-top">
+        <h2 class="lb-heading">🏆 Leaderboard</h2>
+        <div class="live-pill" aria-label="Live updating">
+          <span class="live-dot" aria-hidden="true"></span> Live
+        </div>
+      </div>
+      <table class="lb-table" aria-label="Rankings">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col" style="text-align:right">Score</th>
+          </tr>
+        </thead>
+        <tbody id="lb-body">
+          <tr><td colspan="3" class="lb-empty">Waiting for first player… 👀</td></tr>
+        </tbody>
+      </table>
+      <p class="lb-footer" id="lb-footer" aria-live="polite"></p>
+    </section>
+  </div>
+</div>
+
+<div id="confetti-layer" aria-hidden="true"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  ⚙️  FIREBASE CONFIG — Replace with your values
+//  See SETUP_GUIDE.md for step-by-step instructions
+// ══════════════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey:            "AIzaSyC2SzLF2SF5gbIuaGspesPjuSoTY9Q9A1s",
+  authDomain:        "ai-symposium-quiz.firebaseapp.com",
+  databaseURL:       "https://ai-symposium-quiz-default-rtdb.firebaseio.com",
+  projectId:         "ai-symposium-quiz",
+  storageBucket:     "ai-symposium-quiz.firebasestorage.app",
+  messagingSenderId: "649538822498",
+  appId:             "1:649538822498:web:bc7c07b4c9727cf2b70c3b"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ══════════════════════════════════════════════════════
+//  SECTION CONFIG
+// ══════════════════════════════════════════════════════
+const SEC = {
+  "AI History":         { color:"#1565C0", bg:"#E3F0FF", emoji:"🤖" },
+  "UCLA AI History":    { color:"#B74600", bg:"#FFF3E0", emoji:"🐻" },
+  "Sports & Animation": { color:"#6A1B9A", bg:"#F5EEFF", emoji:"🎬" },
+  "Fun AI Tech":        { color:"#1B5E20", bg:"#EAF5EA", emoji:"⚡" },
+};
+
+const TYPE_DESC = {
+  "Objective Fact Error":   "Wrong date, name, number, or place",
+  "Misattributed Quote":    "Real person, invented words",
+  "Invented Backstory":     "Plausible but unverifiable private detail",
+  "Misleading Connection":  "Real facts, wrongly linked",
+  "False Academic Info":    "Fake study, citation, or statistic",
+  "Unfounded Fabrication":  "Made-up claim with no basis",
+};
+
+// ══════════════════════════════════════════════════════
+//  10 QUESTIONS
+// ══════════════════════════════════════════════════════
+const questions = [
+  // ── AI History ──────────────────────────────────────
+  { id:1, section:"AI History",
+    passage:"The term 'artificial intelligence' was coined by Alan Turing at the 1956 Dartmouth Conference, where he proposed that machines could simulate any aspect of human intelligence. The conference is widely regarded as the founding event of AI as a field.",
+    wOpts:[
+      {k:"A", t:"The conference was held at MIT, not Dartmouth"},
+      {k:"B", t:"The term was coined by John McCarthy, not Alan Turing"},
+      {k:"C", t:"The conference took place in 1952, not 1956"},
+      {k:"D", t:"Turing proposed the test in a separate 1950 paper, not at Dartmouth"},
+    ], cw:"B",
+    tOpts:[
+      {k:"A", t:"Objective Fact Error"},
+      {k:"B", t:"Misattributed Quote"},
+      {k:"C", t:"Invented Backstory"},
+      {k:"D", t:"Misleading Connection"},
+    ], ct:"A",
+    explain:"John McCarthy coined 'artificial intelligence' in the Dartmouth proposal. Turing's Imitation Game was proposed in a separate 1950 paper. Wrong person credited = Objective Fact Error." },
+
+  { id:2, section:"AI History",
+    passage:"Alan Turing proposed the 'Imitation Game' — now called the Turing Test — in his 1950 paper 'Computing Machinery and Intelligence,' published in the journal Nature. The paper asked: 'Can machines think?'",
+    wOpts:[
+      {k:"A", t:"The paper asked 'Can machines learn?' not 'Can machines think?'"},
+      {k:"B", t:"The paper was published in 1955, not 1950"},
+      {k:"C", t:"The paper was published in the journal Mind, not Nature"},
+      {k:"D", t:"The test was originally called the 'Intelligence Game'"},
+    ], cw:"C",
+    tOpts:[
+      {k:"A", t:"Misleading Connection"},
+      {k:"B", t:"Invented Backstory"},
+      {k:"C", t:"Objective Fact Error"},
+      {k:"D", t:"Misattributed Quote"},
+    ], ct:"C",
+    explain:"Turing's paper was published in Mind, not Nature. Both are real prestigious journals — AI often swaps one credible source for another. Classic Objective Fact Error." },
+
+  // ── UCLA AI History ──────────────────────────────────
+  { id:3, section:"UCLA AI History",
+    passage:"On October 29, 1969, UCLA's Leonard Kleinrock led the team that sent the first message over ARPANET — the network that became the internet. The intended message was 'HELLO,' but the system crashed after just two characters.",
+    wOpts:[
+      {k:"A", t:"The message was sent from Stanford to UCLA, not the reverse"},
+      {k:"B", t:"The first message was sent in 1972, not 1969"},
+      {k:"C", t:"The intended message was 'LOGIN,' not 'HELLO' — it crashed after 'L' and 'O'"},
+      {k:"D", t:"The crash was caused by a hardware failure at UCLA"},
+    ], cw:"C",
+    tOpts:[
+      {k:"A", t:"Objective Fact Error"},
+      {k:"B", t:"Invented Backstory"},
+      {k:"C", t:"Misleading Connection"},
+      {k:"D", t:"False Academic Info"},
+    ], ct:"A",
+    explain:"The intended message was 'LOGIN.' It crashed at Stanford Research Institute after 'L' and 'O,' giving us history's first network message: 'LO.' 'HELLO' sounds poetic — that's why AI generates it. Objective Fact Error." },
+
+  { id:4, section:"UCLA AI History",
+    passage:"UCLA professor Judea Pearl won the ACM Turing Award in 2011 for his foundational work in AI. Pearl's pioneering research on neural networks and deep learning laid the groundwork for modern systems like ChatGPT.",
+    wOpts:[
+      {k:"A", t:"Pearl won the Turing Award in 2018, not 2011"},
+      {k:"B", t:"Pearl's work was on probabilistic reasoning and Bayesian networks, not neural networks"},
+      {k:"C", t:"Judea Pearl was a professor at Stanford, not UCLA"},
+      {k:"D", t:"The award was given by IEEE, not ACM"},
+    ], cw:"B",
+    tOpts:[
+      {k:"A", t:"Objective Fact Error"},
+      {k:"B", t:"Misleading Connection"},
+      {k:"C", t:"Invented Backstory"},
+      {k:"D", t:"False Academic Info"},
+    ], ct:"B",
+    explain:"Pearl won for Bayesian networks and causal reasoning — not neural networks. These are entirely different AI paradigms. Real person, real award, wrong field = Misleading Connection." },
+
+  { id:5, section:"UCLA AI History",
+    passage:"Vint Cerf, one of the 'Fathers of the Internet,' earned his PhD at UCLA under Leonard Kleinrock. He later co-developed TCP/IP with Bob Kahn — work for which President Obama awarded them the Presidential Medal of Freedom in 2014.",
+    wOpts:[
+      {k:"A", t:"Cerf earned his PhD at MIT, not UCLA"},
+      {k:"B", t:"TCP/IP was co-developed with Tim Berners-Lee, not Bob Kahn"},
+      {k:"C", t:"The Medal of Freedom was awarded by President Bush in 2005, not Obama in 2014"},
+      {k:"D", t:"Cerf received the Turing Award, not the Presidential Medal of Freedom"},
+    ], cw:"C",
+    tOpts:[
+      {k:"A", t:"Invented Backstory"},
+      {k:"B", t:"Objective Fact Error"},
+      {k:"C", t:"Misleading Connection"},
+      {k:"D", t:"Misattributed Quote"},
+    ], ct:"B",
+    explain:"Bush awarded Cerf and Kahn the Presidential Medal of Freedom in 2005 — not Obama in 2014. Swapping the president and year is a clean Objective Fact Error." },
+
+  // ── Sports & Animation ───────────────────────────────
+  { id:6, section:"Sports & Animation",
+    passage:"Pixar's Toy Story (1995) was the first fully computer-animated feature film. At the 68th Academy Awards ceremony in 1996, it won the Oscar for Best Animated Feature — the first film ever to receive that honor.",
+    wOpts:[
+      {k:"A", t:"Toy Story was produced by DreamWorks, not Pixar"},
+      {k:"B", t:"Toy Story was released in 1993, not 1995"},
+      {k:"C", t:"The Best Animated Feature Oscar didn't exist until 2002 — Toy Story received a Special Achievement Award"},
+      {k:"D", t:"The first Best Animated Feature Oscar went to The Lion King, not Toy Story"},
+    ], cw:"C",
+    tOpts:[
+      {k:"A", t:"Invented Backstory"},
+      {k:"B", t:"Misleading Connection"},
+      {k:"C", t:"Objective Fact Error"},
+      {k:"D", t:"Unfounded Fabrication"},
+    ], ct:"C",
+    explain:"Best Animated Feature didn't exist until 2002, when Shrek won it. Toy Story received a Special Achievement Award. AI applied a modern category to a film that predates it. Objective Fact Error." },
+
+  { id:7, section:"Sports & Animation",
+    passage:"World chess champion Magnus Carlsen has openly credited AI training tools with transforming competitive chess. In a 2019 interview with The Guardian, he stated: 'I owe everything to Stockfish. Without it, I would never have become world champion.'",
+    wOpts:[
+      {k:"A", t:"Magnus Carlsen is Danish, not Norwegian"},
+      {k:"B", t:"Stockfish is a Go engine, not a chess engine"},
+      {k:"C", t:"The interview was with the New York Times, not The Guardian"},
+      {k:"D", t:"This specific quote is fabricated — Carlsen has never said this"},
+    ], cw:"D",
+    tOpts:[
+      {k:"A", t:"Objective Fact Error"},
+      {k:"B", t:"Invented Backstory"},
+      {k:"C", t:"Misattributed Quote"},
+      {k:"D", t:"Misleading Connection"},
+    ], ct:"C",
+    explain:"Carlsen discusses AI training tools but this specific quote doesn't exist. The quote is convincing because it matches his known views — exactly what makes Misattributed Quotes so effective." },
+
+  // ── Fun AI Tech ──────────────────────────────────────
+  { id:8, section:"Fun AI Tech",
+    passage:"Amazon's voice assistant was codenamed 'Doppler' during development. The name 'Alexa' was chosen partly because the hard 'x' sound is easier for voice recognition to detect. According to a 2016 Wired profile, engineers considered 204 alternative names before settling on Alexa.",
+    wOpts:[
+      {k:"A", t:"The codename was 'Echo,' not 'Doppler'"},
+      {k:"B", t:"Alexa was named after the Library of Alexandria, not for voice recognition reasons"},
+      {k:"C", t:"The '204 alternative names' and the Wired profile citation are fabricated"},
+      {k:"D", t:"Alexa launched in 2017, not 2014"},
+    ], cw:"C",
+    tOpts:[
+      {k:"A", t:"False Academic Info"},
+      {k:"B", t:"Invented Backstory"},
+      {k:"C", t:"Objective Fact Error"},
+      {k:"D", t:"Misleading Connection"},
+    ], ct:"B",
+    explain:"The '204 names' figure and the Wired profile don't exist. AI cited a real publication with a suspiciously specific number to make an invented detail look researched. Invented Backstory dressed as a citation." },
+
+  { id:9, section:"Fun AI Tech",
+    passage:"When OpenAI withheld the full GPT-2 model in 2019, CEO Sam Altman held a press conference to announce the decision, stating: 'We believe the responsible path is to withhold the full model until we better understand the risks.'",
+    wOpts:[
+      {k:"A", t:"GPT-2 was released in 2021, not 2019"},
+      {k:"B", t:"GPT-2 was developed by Google Brain, not OpenAI"},
+      {k:"C", t:"The press conference and Sam Altman quote are fabricated — the decision was announced via a blog post"},
+      {k:"D", t:"The withheld model was GPT-3, not GPT-2"},
+    ], cw:"C",
+    tOpts:[
+      {k:"A", t:"Objective Fact Error"},
+      {k:"B", t:"Invented Backstory"},
+      {k:"C", t:"Misattributed Quote"},
+      {k:"D", t:"Unfounded Fabrication"},
+    ], ct:"C",
+    explain:"OpenAI announced GPT-2 via a blog post, not a press conference. The quote is invented. Real event + fake quote + fake format = Misattributed Quote." },
+
+  { id:10, section:"Fun AI Tech",
+    passage:"The term 'deepfake' was coined in late 2017 by an anonymous Reddit user. In a 2018 interview with Vice magazine, the user — speaking anonymously — revealed their original intentions were 'purely experimental, not harmful.'",
+    wOpts:[
+      {k:"A", t:"The term was coined in 2020, not 2017"},
+      {k:"B", t:"'Deepfake' combines 'deep web' and 'fake,' not 'deep learning' and 'fake'"},
+      {k:"C", t:"The 2018 Vice interview is fabricated — the user remained anonymous and gave no interview"},
+      {k:"D", t:"The term was coined by an MIT researcher, not a Reddit user"},
+    ], cw:"C",
+    tOpts:[
+      {k:"A", t:"Unfounded Fabrication"},
+      {k:"B", t:"False Academic Info"},
+      {k:"C", t:"Invented Backstory"},
+      {k:"D", t:"Misattributed Quote"},
+    ], ct:"C",
+    explain:"The user remained anonymous and gave no interview. The fabricated quote adds a sympathetic motive to an invented source — mimicking investigative journalism to feel credible. Invented Backstory." },
+];
+
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+let state = {
+  name:"", email:"",
+  idx:0,
+  answers:{},   // qId → {w, t}
+  score:0,
+  bySection:{},
+  submitted:false,
+};
+
+// ══════════════════════════════════════════════════════
+//  FORM VALIDATION
+// ══════════════════════════════════════════════════════
+function checkForm() {
+  const n = document.getElementById("inp-name").value.trim();
+  const e = document.getElementById("inp-email").value.trim();
+  document.getElementById("btn-start").disabled = !(n && e.includes("@") && e.includes("."));
+}
+
+// ══════════════════════════════════════════════════════
+//  SCREEN SWITCHING
+// ══════════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => {
+    s.classList.remove("active");
+    s.setAttribute("aria-hidden","true");
+  });
+  const el = document.getElementById("screen-" + id);
+  el.classList.add("active");
+  el.removeAttribute("aria-hidden");
+  window.scrollTo({top:0, behavior:"instant"});
+}
+
+// ══════════════════════════════════════════════════════
+//  QUIZ
+// ══════════════════════════════════════════════════════
+function startQuiz() {
+  state.name  = document.getElementById("inp-name").value.trim();
+  state.email = document.getElementById("inp-email").value.trim();
+  state.idx = 0; state.answers = {};
+  showScreen("quiz");
+  renderQ();
+}
+
+function renderQ() {
+  const q   = questions[state.idx];
+  const sec = SEC[q.section];
+  const pct = Math.round(((state.idx + 1) / questions.length) * 100);
+  const saved = state.answers[q.id] || {};
+
+  // Header
+  document.getElementById("qnum-label").textContent = `Q ${state.idx+1} / ${questions.length}`;
+  document.getElementById("prog-fill").style.width   = pct + "%";
+  document.getElementById("prog-pct").textContent    = pct + "%";
+  document.getElementById("prog-bar-wrap").setAttribute("aria-valuenow", pct);
+
+  function optHtml(opts, part, savedKey) {
+    return opts.map(o => {
+      const sel = savedKey === o.k;
+      const sub = part === "t" ? `<span class="opt-subtext">${TYPE_DESC[o.t] || ""}</span>` : "";
+      return `<button
+        class="opt-btn ${sel ? "selected" : ""} ${part === "t" ? "type-opt" : ""}"
+        style="--sec-color:${sec.color}; --sec-bg:${sec.bg}"
+        onclick="pick('${part}','${o.k}',${q.id})"
+        aria-pressed="${sel}"
+        aria-label="Option ${o.k}: ${o.t}">
+          <span class="opt-key" aria-hidden="true">${o.k}</span>
+          <span>
+            <span class="opt-text">${o.t}</span>
+            ${sub}
+          </span>
+        </button>`;
+    }).join("");
+  }
+
+  const isLast = state.idx >= questions.length - 1;
+  const bothDone = saved.w && saved.t;
+
+  document.getElementById("quiz-body").innerHTML = `
+    <span class="section-badge" style="background:${sec.bg};color:${sec.color}" aria-label="Section: ${q.section}">
+      <span aria-hidden="true">${sec.emoji}</span> ${q.section}
+    </span>
+
+    <div class="passage-card" style="background:${sec.bg}; border-color:${sec.color}; color:#111;"
+         role="article" aria-label="Passage for question ${state.idx+1}">
+      ${q.passage}
+    </div>
+
+    <div class="part-header" role="heading" aria-level="2">
+      <span class="part-num" aria-hidden="true">1</span>
+      <span class="part-label">What is wrong in this passage?</span>
+    </div>
+    <div class="options-list" role="group" aria-label="Options for Part 1: What is wrong">
+      ${optHtml(q.wOpts, "w", saved.w)}
+    </div>
+
+    <hr class="part-divider" aria-hidden="true">
+
+    <div class="part-header" role="heading" aria-level="2">
+      <span class="part-num" aria-hidden="true">2</span>
+      <span class="part-label">What type of hallucination is this?</span>
+    </div>
+    <div class="options-list" role="group" aria-label="Options for Part 2: Hallucination type">
+      ${optHtml(q.tOpts, "t", saved.t)}
+    </div>
+
+    <button class="btn-next" onclick="nextQ()" ${bothDone ? "" : "disabled"}
+            aria-disabled="${!bothDone}"
+            aria-label="${isLast ? "See my results" : "Next question"}">
+      ${isLast ? "See My Results 🎉" : "Next Question →"}
+    </button>
+    <div style="height:32px"></div>
+  `;
+}
+
+function pick(part, key, qid) {
+  if (!state.answers[qid]) state.answers[qid] = {};
+  state.answers[qid][part] = key;
+  renderQ();
+}
+
+function nextQ() {
+  state.idx++;
+  if (state.idx >= questions.length) {
+    calcScore();
+    showScreen("results");
+    renderResults();
+  } else {
+    renderQ();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  SCORING
+// ══════════════════════════════════════════════════════
+function calcScore() {
+  let total = 0;
+  const byS = {};
+  questions.forEach(q => {
+    const a = state.answers[q.id] || {};
+    const pts = (a.w === q.cw ? 1 : 0) + (a.t === q.ct ? 1 : 0);
+    total += pts;
+    if (!byS[q.section]) byS[q.section] = {got:0, max:0};
+    byS[q.section].got += pts;
+    byS[q.section].max += 2;
+  });
+  state.score = total;
+  state.bySection = byS;
+}
+
+function renderResults() {
+  const pct   = Math.round((state.score / 20) * 100);
+  const emoji = pct >= 90 ? "🏆" : pct >= 70 ? "🎉" : pct >= 50 ? "👍" : "🤔";
+  document.getElementById("res-emoji").textContent  = emoji;
+  document.getElementById("res-name").textContent   = `Great job, ${state.name}!`;
+  document.getElementById("res-score").textContent  = state.score;
+  document.getElementById("res-pct").textContent    = `${pct}% correct`;
+
+  document.getElementById("res-breakdown").innerHTML =
+    Object.entries(state.bySection).map(([sec, {got, max}]) => {
+      const s   = SEC[sec];
+      const col = got/max >= .75 ? "#22c55e" : got/max >= .5 ? "#e0b84e" : "#ef4444";
+      return `<div class="breakdown-row">
+        <span class="b-label">${s.emoji} ${sec}</span>
+        <span class="b-val" style="color:${col}">${got}&thinsp;/&thinsp;${max}</span>
+      </div>`;
+    }).join("");
+
+  if (pct >= 60) confetti();
+}
+
+function submitScore() {
+  if (state.submitted) return;
+  const btn = document.getElementById("btn-submit");
+  const msg = document.getElementById("submit-msg");
+  btn.disabled = true;
+  btn.textContent = "Submitting…";
+
+  db.ref("scores").push({
+    name: state.name, email: state.email,
+    score: state.score, maxScore: 20,
+    pct: Math.round((state.score/20)*100),
+    timestamp: Date.now(),
+  }).then(() => {
+    state.submitted = true;
+    btn.textContent = "✓ Submitted!";
+    msg.textContent = "You're on the leaderboard! 🎉";
+  }).catch(() => {
+    btn.disabled = false;
+    btn.textContent = "Submit to Leaderboard 🏆";
+    msg.textContent = "⚠️ Connection failed. Check WiFi and try again.";
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  DISPLAY / LEADERBOARD
+// ══════════════════════════════════════════════════════
+function initDisplay() {
+  showScreen("display");
+
+  // QR code → quiz URL (strip ?display=true)
+  const quizURL = window.location.href.replace(/([?&])display=true(&|$)/, '$1').replace(/[?&]$/, '');
+  new QRCode(document.getElementById("qrcode"), {
+    text: quizURL, width: 190, height: 190,
+    colorDark:"#1a1a2e", colorLight:"#ffffff",
+    correctLevel: QRCode.CorrectLevel.M,
+  });
+
+  db.ref("scores").on("value", snap => {
+    const rows = [];
+    snap.forEach(c => rows.push(c.val()));
+    rows.sort((a,b) => b.score - a.score);
+    renderLB(rows);
+  });
+}
+
+function renderLB(rows) {
+  document.getElementById("stat-players").textContent = rows.length;
+  if (rows.length) {
+    const avg = Math.round(rows.reduce((s,r) => s + r.score, 0) / rows.length);
+    document.getElementById("stat-avg").textContent = avg;
+    document.getElementById("stat-top").textContent  = rows[0].score;
+  }
+
+  const medals = ["🥇","🥈","🥉"];
+  const top = rows.slice(0, 20);
+  const best = top.length ? top[0].score : 20;
+
+  if (!top.length) {
+    document.getElementById("lb-body").innerHTML =
+      '<tr><td colspan="3" class="lb-empty">Waiting for first player… 👀</td></tr>';
+    return;
+  }
+
+  document.getElementById("lb-body").innerHTML = top.map((r, i) => {
+    const rank  = i < 3 ? `<span class="rank-medal" aria-label="Rank ${i+1}">${medals[i]}</span>`
+                        : `<span class="rank-num" aria-label="Rank ${i+1}">${i+1}</span>`;
+    const barW  = best > 0 ? Math.round((r.score / best) * 100) : 0;
+    return `<tr>
+      <td class="rank-cell">${rank}</td>
+      <td class="name-cell">
+        <div class="lb-name">${esc(r.name)}</div>
+        <div class="lb-bar-wrap" role="presentation">
+          <div class="lb-bar" style="width:${barW}%"></div>
+        </div>
+      </td>
+      <td class="score-cell">
+        <span class="lb-pts" aria-label="${r.score} out of 20">${r.score}</span>
+        <span class="lb-max"> / 20</span>
+      </td>
+    </tr>`;
+  }).join("");
+
+  document.getElementById("lb-footer").textContent =
+    "Last updated " + new Date().toLocaleTimeString();
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+// ══════════════════════════════════════════════════════
+//  CONFETTI
+// ══════════════════════════════════════════════════════
+function confetti() {
+  const layer  = document.getElementById("confetti-layer");
+  const colors = ["#e0b84e","#1565C0","#B74600","#6A1B9A","#1B5E20","#ef4444","#22c55e","#fff"];
+  layer.innerHTML = "";
+  for (let i = 0; i < 70; i++) {
+    const p = document.createElement("div");
+    p.className = "cp";
+    const size = 6 + Math.random() * 8;
+    p.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:-10px;
+      width:${size}px; height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      border-radius:${Math.random() > .4 ? "50%" : "2px"};
+      animation-delay:${Math.random()*1.2}s;
+      animation-duration:${2.5 + Math.random()*2}s;
+    `;
+    layer.appendChild(p);
+    setTimeout(() => p.remove(), 5000);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  INIT — route by ?display param
+// ══════════════════════════════════════════════════════
+if (new URLSearchParams(window.location.search).get("display") === "true") {
+  initDisplay();
+}
+</script>
+</body>
+</html>
