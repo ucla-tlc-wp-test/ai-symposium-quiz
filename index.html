@@ -501,6 +501,68 @@ input::placeholder { color: rgba(255,255,255,.35); }
 }
 
 /* ════════════════════════════════
+   PODIUM (Top 3)
+════════════════════════════════ */
+.podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  min-height: 160px;
+}
+.podium-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  max-width: 180px;
+}
+.podium-card {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 16px;
+  padding: 14px 12px 10px;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 0;
+}
+.podium-card.first  { border-color: #e0b84e; background: rgba(224,184,78,.1); }
+.podium-card.second { border-color: #94a3b8; background: rgba(148,163,184,.08); }
+.podium-card.third  { border-color: #cd7c3a; background: rgba(205,124,58,.08); }
+
+.podium-medal { font-size: 2rem; margin-bottom: 4px; }
+.podium-name  { color: #fff; font-size: 1rem; font-weight: 700; margin-bottom: 4px; word-break: break-word; line-height: 1.3; }
+.podium-score { font-size: 1.5rem; font-weight: 900; }
+.podium-denom { color: rgba(255,255,255,.4); font-size: 0.8rem; }
+.first  .podium-score { color: #e0b84e; }
+.second .podium-score { color: #94a3b8; }
+.third  .podium-score { color: #cd7c3a; }
+
+.podium-base {
+  width: 100%;
+  border-radius: 0 0 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: .5px;
+  color: rgba(255,255,255,.5);
+}
+.first-base  { background: rgba(224,184,78,.25); height: 44px; }
+.second-base { background: rgba(148,163,184,.15); height: 32px; }
+.third-base  { background: rgba(205,124,58,.15); height: 24px; }
+
+.podium-empty {
+  color: rgba(255,255,255,.25);
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+/* ════════════════════════════════
    UTILITY
 ════════════════════════════════ */
 .sr-only {
@@ -603,7 +665,12 @@ input::placeholder { color: rgba(255,255,255,.35); }
           <span class="live-dot" aria-hidden="true"></span> Live
         </div>
       </div>
-      <table class="lb-table" aria-label="Rankings">
+
+      <!-- Top 3 podium -->
+      <div class="podium" id="podium" aria-label="Top 3 players"></div>
+
+      <!-- Rest of rankings -->
+      <table class="lb-table" id="lb-rest-wrap" aria-label="Full rankings" style="margin-top:20px">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -1047,6 +1114,7 @@ function initDisplay() {
 }
 
 function renderLB(rows) {
+  // Stats bar
   document.getElementById("stat-players").textContent = rows.length;
   if (rows.length) {
     const avg = Math.round(rows.reduce((s,r) => s + r.score, 0) / rows.length);
@@ -1054,34 +1122,61 @@ function renderLB(rows) {
     document.getElementById("stat-top").textContent  = rows[0].score;
   }
 
-  const medals = ["🥇","🥈","🥉"];
-  const top = rows.slice(0, 20);
-  const best = top.length ? top[0].score : 20;
-
-  if (!top.length) {
+  // ── Podium: top 3 ──
+  const podium = document.getElementById("podium");
+  if (!rows.length) {
+    podium.innerHTML = '<div class="podium-empty">🎯 Waiting for first player…</div>';
     document.getElementById("lb-body").innerHTML =
       '<tr><td colspan="3" class="lb-empty">Waiting for first player… 👀</td></tr>';
     return;
   }
 
-  document.getElementById("lb-body").innerHTML = top.map((r, i) => {
-    const rank  = i < 3 ? `<span class="rank-medal" aria-label="Rank ${i+1}">${medals[i]}</span>`
-                        : `<span class="rank-num" aria-label="Rank ${i+1}">${i+1}</span>`;
-    const barW  = best > 0 ? Math.round((r.score / best) * 100) : 0;
-    return `<tr>
-      <td class="rank-cell">${rank}</td>
-      <td class="name-cell">
-        <div class="lb-name">${esc(r.name)}</div>
-        <div class="lb-bar-wrap" role="presentation">
-          <div class="lb-bar" style="width:${barW}%"></div>
+  // Order: 2nd | 1st | 3rd (classic podium layout)
+  const podiumOrder = [
+    { idx:1, cls:"second", medal:"🥈", baseH:"second-base", label:"2nd" },
+    { idx:0, cls:"first",  medal:"🥇", baseH:"first-base",  label:"1st" },
+    { idx:2, cls:"third",  medal:"🥉", baseH:"third-base",  label:"3rd" },
+  ];
+
+  podium.innerHTML = podiumOrder.map(({idx, cls, medal, baseH, label}) => {
+    const r = rows[idx];
+    if (!r) return ""; // fewer than 3 players
+    return `
+      <div class="podium-slot" aria-label="Rank ${idx+1}: ${esc(r.name)}, score ${r.score}">
+        <div class="podium-card ${cls}">
+          <div class="podium-medal" aria-hidden="true">${medal}</div>
+          <div class="podium-name">${esc(r.name)}</div>
+          <div class="podium-score">${r.score}</div>
+          <div class="podium-denom">/ 20 pts</div>
         </div>
-      </td>
-      <td class="score-cell">
-        <span class="lb-pts" aria-label="${r.score} out of 20">${r.score}</span>
-        <span class="lb-max"> / 20</span>
-      </td>
-    </tr>`;
+        <div class="podium-base ${baseH}">${label}</div>
+      </div>`;
   }).join("");
+
+  // ── Rest: rank 4 onward ──
+  const rest = rows.slice(3, 20);
+  const best = rows[0].score || 20;
+
+  if (!rest.length) {
+    document.getElementById("lb-body").innerHTML =
+      '<tr><td colspan="3" style="padding:12px;color:rgba(255,255,255,.25);font-size:.9rem;text-align:center">Top 3 shown above</td></tr>';
+  } else {
+    document.getElementById("lb-body").innerHTML = rest.map((r, i) => {
+      const rank = i + 4;
+      const barW = best > 0 ? Math.round((r.score / best) * 100) : 0;
+      return `<tr>
+        <td class="rank-cell"><span class="rank-num">${rank}</span></td>
+        <td class="name-cell">
+          <div class="lb-name">${esc(r.name)}</div>
+          <div class="lb-bar-wrap"><div class="lb-bar" style="width:${barW}%"></div></div>
+        </td>
+        <td class="score-cell">
+          <span class="lb-pts">${r.score}</span>
+          <span class="lb-max"> / 20</span>
+        </td>
+      </tr>`;
+    }).join("");
+  }
 
   document.getElementById("lb-footer").textContent =
     "Last updated " + new Date().toLocaleTimeString();
