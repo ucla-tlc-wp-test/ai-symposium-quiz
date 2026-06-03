@@ -25,7 +25,7 @@ body {
 
 /* Focus styles for keyboard accessibility */
 :focus-visible {
-  outline: 3px solid #e0b84e;
+  outline: 3px solid #2774AE;
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -38,52 +38,68 @@ body {
    WELCOME SCREEN
 ════════════════════════════════ */
 #screen-welcome {
-  background: linear-gradient(150deg, #1a1a2e 0%, #16213e 55%, #0f3460 100%);
+  background: linear-gradient(160deg, #eaf3fb 0%, #f7fafd 45%, #ffffff 100%);
   align-items: center;
   justify-content: center;
   padding: 24px 20px;
 }
 .welcome-card {
-  background: rgba(255,255,255,.09);
-  border: 1px solid rgba(255,255,255,.18);
+  background: #ffffff;
+  border: 1px solid #e3e8ef;
   border-radius: 24px;
   padding: 36px 28px;
   width: 100%;
   max-width: 420px;
+  box-shadow: 0 16px 48px rgba(0,59,92,.12);
 }
 .welcome-logo { font-size: 52px; text-align: center; margin-bottom: 10px; }
 .welcome-title {
-  color: #fff;
+  color: #003B5C;
   font-size: 1.6rem;
   font-weight: 800;
   text-align: center;
   margin-bottom: 4px;
 }
 .welcome-sub {
-  color: rgba(255,255,255,.55);
+  color: #5b6b7b;
   font-size: 1rem;
   text-align: center;
   margin-bottom: 24px;
 }
 .info-box {
-  background: rgba(255,255,255,.07);
-  border-left: 4px solid #e0b84e;
+  background: #eaf3fb;
+  border-left: 4px solid #2774AE;
   border-radius: 10px;
   padding: 14px 16px;
   margin-bottom: 24px;
 }
 .info-box p {
-  color: rgba(255,255,255,.8);
+  color: #2a3b49;
   font-size: 0.95rem;
   line-height: 1.6;
   margin-bottom: 6px;
 }
 .info-box p:last-child { margin: 0; }
-.info-box strong { color: #e0b84e; }
+.info-box strong { color: #2774AE; }
+.num-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: #2774AE;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-right: 3px;
+  vertical-align: middle;
+}
 
 label {
   display: block;
-  color: rgba(255,255,255,.75);
+  color: #5b6b7b;
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: .6px;
@@ -92,25 +108,25 @@ label {
 }
 input[type=text], input[type=email] {
   width: 100%;
-  background: rgba(255,255,255,.12);
-  border: 2px solid rgba(255,255,255,.22);
+  background: #f7fafd;
+  border: 2px solid #d0d8e2;
   border-radius: 12px;
-  color: #fff;
+  color: #1a1a2e;
   font-size: 1.05rem;
   padding: 14px 16px;
   margin-bottom: 16px;
   outline: none;
   transition: border .2s;
 }
-input[type=text]:focus, input[type=email]:focus { border-color: #e0b84e; }
-input::placeholder { color: rgba(255,255,255,.35); }
+input[type=text]:focus, input[type=email]:focus { border-color: #2774AE; }
+input::placeholder { color: #9aa7b5; }
 
 .btn-primary {
   width: 100%;
-  background: linear-gradient(135deg, #e0b84e, #f0a500);
+  background: linear-gradient(135deg, #2774AE, #005587);
   border: none;
   border-radius: 14px;
-  color: #1a1a2e;
+  color: #ffffff;
   font-size: 1.1rem;
   font-weight: 800;
   padding: 18px;
@@ -125,7 +141,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
 /* ════════════════════════════════
    QUIZ SCREEN
 ════════════════════════════════ */
-#screen-quiz { background: #f0f2f5; }
+#screen-quiz { background: #f2f7fb; }
 
 .quiz-header {
   background: #fff;
@@ -155,7 +171,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
 }
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #e0b84e, #f0a500);
+  background: linear-gradient(90deg, #2774AE, #005587);
   border-radius: 999px;
   transition: width .4s ease;
 }
@@ -203,7 +219,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
   margin-top: 4px;
 }
 .part-num {
-  background: #1a1a2e;
+  background: #2774AE;
   color: #fff;
   border-radius: 10px;
   width: 36px;
@@ -275,7 +291,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
 /* Next button */
 .btn-next {
   width: 100%;
-  background: #1a1a2e;
+  background: #2774AE;
   border: none;
   border-radius: 14px;
   color: #fff;
@@ -301,35 +317,37 @@ input::placeholder { color: rgba(255,255,255,.35); }
    RESULTS SCREEN
 ════════════════════════════════ */
 #screen-results {
-  background: linear-gradient(150deg, #1a1a2e 0%, #16213e 55%, #0f3460 100%);
+  background: linear-gradient(160deg, #eaf3fb 0%, #f7fafd 45%, #ffffff 100%);
   align-items: center;
   justify-content: center;
   padding: 24px 20px;
 }
 .results-card {
-  background: rgba(255,255,255,.09);
-  border: 1px solid rgba(255,255,255,.18);
+  background: #ffffff;
+  border: 1px solid #e3e8ef;
   border-radius: 24px;
   padding: 36px 28px;
   width: 100%;
   max-width: 420px;
   text-align: center;
+  box-shadow: 0 16px 48px rgba(0,59,92,.12);
 }
 .results-emoji { font-size: 60px; margin-bottom: 10px; }
-.results-name { color: rgba(255,255,255,.65); font-size: 1rem; margin-bottom: 6px; }
-.results-score { color: #e0b84e; font-size: 5rem; font-weight: 900; line-height: 1; }
-.results-denom { color: rgba(255,255,255,.45); font-size: 1.2rem; margin-bottom: 6px; }
-.results-pct { color: #fff; font-size: 1rem; margin-bottom: 24px; }
+.results-name { color: #5b6b7b; font-size: 1rem; margin-bottom: 6px; }
+.results-score { color: #2774AE; font-size: 5rem; font-weight: 900; line-height: 1; }
+.results-denom { color: #9aa7b5; font-size: 1.2rem; margin-bottom: 6px; }
+.results-pct { color: #003B5C; font-size: 1rem; margin-bottom: 24px; }
 
 .breakdown-box {
-  background: rgba(255,255,255,.06);
+  background: #f5f8fc;
+  border: 1px solid #e3e8ef;
   border-radius: 14px;
   padding: 18px;
   margin-bottom: 24px;
   text-align: left;
 }
 .breakdown-box h3 {
-  color: rgba(255,255,255,.5);
+  color: #5b6b7b;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: .6px;
@@ -344,15 +362,15 @@ input::placeholder { color: rgba(255,255,255,.35); }
   font-size: 0.95rem;
 }
 .breakdown-row:last-child { margin: 0; }
-.b-label { color: rgba(255,255,255,.75); }
+.b-label { color: #44515e; }
 .b-val { font-weight: 800; }
 
 .btn-submit {
   width: 100%;
-  background: linear-gradient(135deg, #e0b84e, #f0a500);
+  background: linear-gradient(135deg, #ffd100, #ffc72c);
   border: none;
   border-radius: 14px;
-  color: #1a1a2e;
+  color: #003B5C;
   font-size: 1.05rem;
   font-weight: 800;
   padding: 18px;
@@ -363,13 +381,13 @@ input::placeholder { color: rgba(255,255,255,.35); }
 }
 .btn-submit:active { transform: scale(.97); }
 .btn-submit:disabled { opacity: .4; cursor: not-allowed; transform: none; }
-.submit-msg { color: rgba(255,255,255,.6); font-size: 0.95rem; min-height: 22px; }
+.submit-msg { color: #5b6b7b; font-size: 0.95rem; min-height: 22px; }
 .btn-review {
   width: 100%;
-  background: rgba(255,255,255,.1);
-  border: 1px solid rgba(255,255,255,.25);
+  background: #ffffff;
+  border: 1px solid #2774AE;
   border-radius: 14px;
-  color: #fff;
+  color: #2774AE;
   font-size: 1rem;
   font-weight: 700;
   padding: 16px;
@@ -384,7 +402,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
    DISPLAY SCREEN
 ════════════════════════════════ */
 #screen-display {
-  background: #080818;
+  background: #002A42;
   color: #fff;
   min-height: 100vh;
   padding: 0;
@@ -402,7 +420,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
 }
 
 .display-left {
-  background: linear-gradient(160deg, #1a1a2e, #0f3460);
+  background: linear-gradient(160deg, #003B5C, #005587);
   padding: 36px 28px;
   display: flex;
   flex-direction: column;
@@ -411,7 +429,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
   gap: 0;
   border-right: 1px solid rgba(255,255,255,.08);
 }
-.d-eyebrow { color: #e0b84e; font-size: 0.8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; text-align: center; }
+.d-eyebrow { color: #FFD100; font-size: 0.8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; text-align: center; }
 .d-title { color: #fff; font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 28px; line-height: 1.3; }
 #qrcode-wrap {
   background: #fff;
@@ -430,7 +448,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
   text-align: center;
   min-width: 72px;
 }
-.stat-num { color: #e0b84e; font-size: 1.6rem; font-weight: 900; }
+.stat-num { color: #FFD100; font-size: 1.6rem; font-weight: 900; }
 .stat-lbl { color: rgba(255,255,255,.45); font-size: 0.78rem; margin-top: 2px; }
 
 .display-right {
@@ -489,10 +507,10 @@ input::placeholder { color: rgba(255,255,255,.35); }
 
 .name-cell .lb-name { color: #fff; font-size: 1rem; font-weight: 600; }
 .name-cell .lb-bar-wrap { background: rgba(255,255,255,.08); border-radius: 999px; height: 5px; margin-top: 5px; }
-.name-cell .lb-bar { height: 100%; border-radius: 999px; background: linear-gradient(90deg,#e0b84e,#f0a500); transition: width .6s; }
+.name-cell .lb-bar { height: 100%; border-radius: 999px; background: linear-gradient(90deg,#FFD100,#FFC72C); transition: width .6s; }
 
 .score-cell { text-align: right; }
-.lb-pts { color: #e0b84e; font-size: 1.2rem; font-weight: 900; }
+.lb-pts { color: #FFD100; font-size: 1.2rem; font-weight: 900; }
 .lb-max { color: rgba(255,255,255,.3); font-size: 0.85rem; font-weight: 400; }
 
 .lb-empty { color: rgba(255,255,255,.3); text-align: center; padding: 48px 20px; font-size: 1rem; }
@@ -542,7 +560,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
   width: 100%;
   margin-bottom: 0;
 }
-.podium-card.first  { border-color: #e0b84e; background: rgba(224,184,78,.1); }
+.podium-card.first  { border-color: #FFD100; background: rgba(255,209,0,.12); }
 .podium-card.second { border-color: #94a3b8; background: rgba(148,163,184,.08); }
 .podium-card.third  { border-color: #cd7c3a; background: rgba(205,124,58,.08); }
 
@@ -550,7 +568,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
 .podium-name  { color: #fff; font-size: 1rem; font-weight: 700; margin-bottom: 4px; word-break: break-word; line-height: 1.3; }
 .podium-score { font-size: 1.5rem; font-weight: 900; }
 .podium-denom { color: rgba(255,255,255,.4); font-size: 0.8rem; }
-.first  .podium-score { color: #e0b84e; }
+.first  .podium-score { color: #FFD100; }
 .second .podium-score { color: #94a3b8; }
 .third  .podium-score { color: #cd7c3a; }
 
@@ -565,7 +583,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
   letter-spacing: .5px;
   color: rgba(255,255,255,.5);
 }
-.first-base  { background: rgba(224,184,78,.25); height: 44px; }
+.first-base  { background: rgba(255,209,0,.28); height: 44px; }
 .second-base { background: rgba(148,163,184,.15); height: 32px; }
 .third-base  { background: rgba(205,124,58,.15); height: 24px; }
 
@@ -578,17 +596,104 @@ input::placeholder { color: rgba(255,255,255,.35); }
 }
 
 /* ════════════════════════════════
+   TLC BRANDING
+════════════════════════════════ */
+.tlc-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e3e8ef;
+}
+.tlc-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  /* logo shown as-is (original colors) */
+}
+.tlc-team {
+  color: #5b6b7b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: .3px;
+}
+
+/* Leaderboard brand strip */
+.lb-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.lb-logo {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+  /* logo shown as-is (original colors) */
+}
+.lb-cite {
+  color: rgba(255,255,255,.35);
+  font-size: 0.78rem;
+}
+
+/* Citation box (bottom of welcome card) */
+.cite-box {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e3e8ef;
+}
+.cite-heading {
+  color: #2774AE;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.cite-text {
+  color: #44515e;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  margin-bottom: 6px;
+}
+.cite-url {
+  color: #2774AE;
+  font-weight: 600;
+  word-break: break-all;
+}
+.cite-ref {
+  color: #66737f;
+  font-size: 0.74rem;
+  line-height: 1.55;
+  margin-bottom: 8px;
+  padding-left: 14px;
+  text-indent: -14px; /* hanging indent for reference list */
+}
+.cite-dev {
+  color: #8a96a2;
+  font-size: 0.73rem;
+  line-height: 1.5;
+}
+.cite-dev strong { color: #5b6b7b; }
+
+/* ════════════════════════════════
    TYPE GUIDE (welcome screen)
 ════════════════════════════════ */
 .type-guide {
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.1);
+  background: #f5f8fc;
+  border: 1px solid #e3e8ef;
   border-radius: 14px;
   padding: 16px;
   margin-bottom: 16px;
 }
 .type-guide-title {
-  color: rgba(255,255,255,.5);
+  color: #5b6b7b;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: .6px;
@@ -600,11 +705,11 @@ input::placeholder { color: rgba(255,255,255,.35); }
   align-items: flex-start;
   gap: 10px;
   margin-bottom: 7px;
-  color: rgba(255,255,255,.85);
+  color: #2a3b49;
   font-size: 0.88rem;
   line-height: 1.4;
 }
-.type-row strong { color: #fff; }
+.type-row strong { color: #003B5C; }
 .type-row:last-child { margin: 0; }
 .type-dot {
   width: 10px; height: 10px;
@@ -613,7 +718,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
   margin-top: 4px;
 }
 .score-line {
-  color: #e0b84e;
+  color: #2774AE;
   font-size: 0.95rem;
   font-weight: 700;
   text-align: center;
@@ -623,10 +728,10 @@ input::placeholder { color: rgba(255,255,255,.35); }
 /* ════════════════════════════════
    REVIEW SCREEN
 ════════════════════════════════ */
-#screen-review { background: #f0f2f5; }
+#screen-review { background: #f2f7fb; }
 
 .review-header {
-  background: #1a1a2e;
+  background: #003B5C;
   padding: 14px 18px;
   display: flex;
   align-items: center;
@@ -700,7 +805,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
   margin-bottom: 8px;
 }
 .part-icon {
-  background: #1a1a2e;
+  background: #2774AE;
   color: #fff;
   border-radius: 6px;
   width: 24px; height: 24px;
@@ -723,15 +828,15 @@ input::placeholder { color: rgba(255,255,255,.35); }
 
 .review-explain {
   margin: 8px 16px 14px;
-  background: #f8f9fa;
+  background: #eaf3fb;
   border-radius: 10px;
   padding: 12px 14px;
   font-size: 0.9rem;
   line-height: 1.55;
-  color: #444;
-  border-left: 3px solid #e0b84e;
+  color: #2a3b49;
+  border-left: 3px solid #2774AE;
 }
-.review-explain strong { color: #1a1a2e; }
+.review-explain strong { color: #003B5C; }
 
 /* ════════════════════════════════
    UTILITY
@@ -748,15 +853,19 @@ input::placeholder { color: rgba(255,255,255,.35); }
 <!-- ══════════ WELCOME ══════════ -->
 <div id="screen-welcome" class="screen active" role="main">
   <div class="welcome-card">
+    <div class="tlc-brand">
+      <img src="tlc-logo.png" alt="UCLA Teaching & Learning Center" class="tlc-logo">
+      <span class="tlc-team">AI Action Team</span>
+    </div>
     <div class="welcome-logo" aria-hidden="true">🔍</div>
     <h1 class="welcome-title">Spot the Hallucination</h1>
     <p class="welcome-sub">AI Symposium &nbsp;•&nbsp; Table 3</p>
 
     <div class="info-box" role="note">
       <p>Each question has a short passage with <strong>one hallucination</strong> hidden inside. For each one, identify:</p>
-      <p>❶ <strong>What is wrong</strong> in the passage &nbsp; ❷ <strong>What type</strong> of hallucination it is</p>
-      <p style="margin-top:10px;background:rgba(255,236,120,.15);border:1px solid rgba(255,236,120,.35);border-radius:8px;padding:9px 12px;color:#ffe878;font-size:.88rem;line-height:1.55">
-        💡 <em>You may use AI, Google, or any resource — but fair warning: some hallucinations are designed to fool them too.</em>
+      <p><span class="num-badge">1</span> <strong>What is wrong</strong> in the passage &nbsp; <span class="num-badge">2</span> <strong>What type</strong> of hallucination it is</p>
+      <p style="margin-top:10px;background:#fff3cd;border:2px solid #ffd100;border-radius:8px;padding:12px 14px;color:#5f4a00;font-size:.9rem;line-height:1.6;box-shadow:0 2px 10px rgba(255,209,0,.25)">
+        💡 <strong>You may use AI, Google, or any resource — but some hallucinations are crafted to fool them too.</strong> We <strong>highly recommend</strong> double-checking with a <strong>reliable, authoritative source</strong> (official websites, primary documents, reputable references) before you answer.
       </p>
     </div>
 
@@ -785,6 +894,18 @@ input::placeholder { color: rgba(255,255,255,.35); }
     <button class="btn-primary" id="btn-start" onclick="startQuiz()" disabled aria-label="Start the quiz">
       Start Quiz &rarr;
     </button>
+
+    <div class="cite-box" role="contentinfo">
+      <p class="cite-heading">How to cite this activity</p>
+      <p class="cite-text">UCLA Teaching &amp; Learning Center, AI Action Team. (2025). <em>Spot the Hallucination</em> [Interactive quiz activity]. University of California, Los Angeles. <span class="cite-url">https://ucla-tlc-wp-test.github.io/ai-symposium-quiz</span></p>
+
+      <p class="cite-heading" style="margin-top:14px">References</p>
+      <p class="cite-ref">Huang, L., Yu, W., Ma, W., Zhong, W., Feng, Z., Wang, H., Chen, Q., Peng, W., Feng, X., Qin, B., &amp; Liu, T. (2023). A survey on hallucination in large language models: Principles, taxonomy, challenges, and open questions. <em>arXiv</em>. <span class="cite-url">https://arxiv.org/abs/2311.05232</span></p>
+      <p class="cite-ref">Maleki, N., Padmanabhan, B., &amp; Dutta, K. (2024). AI hallucinations: A misnomer worth clarifying. <em>2024 IEEE Conference on Artificial Intelligence (CAI)</em>, 133&ndash;138. <span class="cite-url">https://doi.org/10.1109/CAI59869.2024.00033</span></p>
+      <p class="cite-ref">Ji, Z., Lee, N., Frieske, R., Yu, T., Su, D., Xu, Y., Ishii, E., Bang, Y. J., Madotto, A., &amp; Fung, P. (2023). Survey of hallucination in natural language generation. <em>ACM Computing Surveys, 55</em>(12), 1&ndash;38. <span class="cite-url">https://doi.org/10.1145/3571730</span></p>
+
+      <p class="cite-dev">Developed by the UCLA Teaching &amp; Learning Center AI Action Team. Built with the assistance of <strong>Claude</strong> (Anthropic). The six-type framework above is a teaching aid created for this activity, informed by the AI-hallucination research listed in the references.</p>
+    </div>
   </div>
 </div>
 
@@ -842,11 +963,11 @@ input::placeholder { color: rgba(255,255,255,.35); }
            onclick="window.location.href = window.location.href.split('?')[0] + '?quiz=true'"
            onkeydown="if(event.key==='Enter') window.location.href = window.location.href.split('?')[0] + '?quiz=true'"
            style="cursor:pointer; transition: transform .15s, box-shadow .15s;"
-           onmouseenter="this.style.transform='scale(1.04)';this.style.boxShadow='0 0 0 4px #e0b84e'"
+           onmouseenter="this.style.transform='scale(1.04)';this.style.boxShadow='0 0 0 4px #FFD100'"
            onmouseleave="this.style.transform='';this.style.boxShadow=''">
         <div id="qrcode"></div>
       </div>
-      <p class="d-scan">📱 Scan or <strong style="color:#e0b84e">tap</strong> to take the quiz</p>
+      <p class="d-scan">📱 Scan or <strong style="color:#FFD100">tap</strong> to take the quiz</p>
       <div class="d-stats" aria-label="Live stats">
         <div class="stat-tile">
           <div class="stat-num" id="stat-players" aria-label="Number of players">0</div>
@@ -860,6 +981,11 @@ input::placeholder { color: rgba(255,255,255,.35); }
           <div class="stat-num" id="stat-top" aria-label="Top score">—</div>
           <div class="stat-lbl">Top Score</div>
         </div>
+      </div>
+
+      <div class="lb-brand">
+        <img src="tlc-logo-white.png" alt="UCLA Teaching & Learning Center" class="lb-logo">
+        <span class="lb-cite">AI Action Team · 2025</span>
       </div>
     </aside>
 
@@ -1262,7 +1388,7 @@ function renderResults() {
   document.getElementById("res-breakdown").innerHTML =
     Object.entries(state.bySection).map(([sec, {got, max}]) => {
       const s   = SEC[sec];
-      const col = got/max >= .75 ? "#22c55e" : got/max >= .5 ? "#e0b84e" : "#ef4444";
+      const col = got/max >= .75 ? "#1a8f3c" : got/max >= .5 ? "#C99700" : "#d12b2b";
       return `<div class="breakdown-row">
         <span class="b-label">${s.emoji} ${sec}</span>
         <span class="b-val" style="color:${col}">${got}&thinsp;/&thinsp;${max}</span>
@@ -1388,7 +1514,7 @@ function initDisplay() {
   const quizURL = base + '?quiz=true';
   new QRCode(document.getElementById("qrcode"), {
     text: quizURL, width: 190, height: 190,
-    colorDark:"#1a1a2e", colorLight:"#ffffff",
+    colorDark:"#003B5C", colorLight:"#ffffff",
     correctLevel: QRCode.CorrectLevel.M,
   });
 
@@ -1481,7 +1607,7 @@ function esc(s) {
 // ══════════════════════════════════════════════════════
 function confetti() {
   const layer  = document.getElementById("confetti-layer");
-  const colors = ["#e0b84e","#1565C0","#B74600","#6A1B9A","#1B5E20","#ef4444","#22c55e","#fff"];
+  const colors = ["#FFD100","#2774AE","#005587","#FFC72C","#1565C0","#8BB8E8","#003B5C","#fff"];
   layer.innerHTML = "";
   for (let i = 0; i < 70; i++) {
     const p = document.createElement("div");
