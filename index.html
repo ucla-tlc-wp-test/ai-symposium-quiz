@@ -755,7 +755,7 @@ input::placeholder { color: rgba(255,255,255,.35); }
     <div class="info-box" role="note">
       <p>Each question has a short passage with <strong>one hallucination</strong> hidden inside. For each one, identify:</p>
       <p>❶ <strong>What is wrong</strong> in the passage &nbsp; ❷ <strong>What type</strong> of hallucination it is</p>
-      <p style="margin-top:10px;color:rgba(255,255,255,.5);font-size:.85rem;line-height:1.5">
+      <p style="margin-top:10px;background:rgba(255,236,120,.15);border:1px solid rgba(255,236,120,.35);border-radius:8px;padding:9px 12px;color:#ffe878;font-size:.88rem;line-height:1.55">
         💡 <em>You may use AI, Google, or any resource — but fair warning: some hallucinations are designed to fool them too.</em>
       </p>
     </div>
@@ -837,8 +837,16 @@ input::placeholder { color: rgba(255,255,255,.35); }
     <aside class="display-left" aria-label="Quiz info and QR code">
       <p class="d-eyebrow">AI Symposium &nbsp;•&nbsp; Table 3</p>
       <h1 class="d-title">Spot the<br>Hallucination 🔍</h1>
-      <div id="qrcode-wrap" aria-label="QR code to join quiz"><div id="qrcode"></div></div>
-      <p class="d-scan">📱 Scan with your phone<br>to take the quiz</p>
+      <div id="qrcode-wrap" aria-label="Click or scan to take the quiz"
+           role="link" tabindex="0"
+           onclick="window.location.href = window.location.href.split('?')[0] + '?quiz=true'"
+           onkeydown="if(event.key==='Enter') window.location.href = window.location.href.split('?')[0] + '?quiz=true'"
+           style="cursor:pointer; transition: transform .15s, box-shadow .15s;"
+           onmouseenter="this.style.transform='scale(1.04)';this.style.boxShadow='0 0 0 4px #e0b84e'"
+           onmouseleave="this.style.transform='';this.style.boxShadow=''">
+        <div id="qrcode"></div>
+      </div>
+      <p class="d-scan">📱 Scan or <strong style="color:#e0b84e">tap</strong> to take the quiz</p>
       <div class="d-stats" aria-label="Live stats">
         <div class="stat-tile">
           <div class="stat-num" id="stat-players" aria-label="Number of players">0</div>
