@@ -364,6 +364,21 @@ input::placeholder { color: rgba(255,255,255,.35); }
 .btn-submit:active { transform: scale(.97); }
 .btn-submit:disabled { opacity: .4; cursor: not-allowed; transform: none; }
 .submit-msg { color: rgba(255,255,255,.6); font-size: 0.95rem; min-height: 22px; }
+.btn-review {
+  width: 100%;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all .15s;
+  min-height: 52px;
+}
+.btn-review:active { opacity: .8; transform: scale(.98); }
 
 /* ════════════════════════════════
    DISPLAY SCREEN
@@ -563,6 +578,162 @@ input::placeholder { color: rgba(255,255,255,.35); }
 }
 
 /* ════════════════════════════════
+   TYPE GUIDE (welcome screen)
+════════════════════════════════ */
+.type-guide {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.type-guide-title {
+  color: rgba(255,255,255,.5);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.type-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 7px;
+  color: rgba(255,255,255,.85);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+.type-row strong { color: #fff; }
+.type-row:last-child { margin: 0; }
+.type-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.score-line {
+  color: #e0b84e;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* ════════════════════════════════
+   REVIEW SCREEN
+════════════════════════════════ */
+#screen-review { background: #f0f2f5; }
+
+.review-header {
+  background: #1a1a2e;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.btn-back {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-back:active { opacity: .7; }
+.review-header-title { color: #fff; font-size: 1rem; font-weight: 700; }
+
+.review-body { padding: 16px 18px; max-width: 600px; margin: 0 auto; }
+
+.review-card {
+  background: #fff;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+.review-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+}
+.review-qnum { font-size: 0.85rem; font-weight: 800; color: #666; }
+.review-result {
+  margin-left: auto;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.review-result.perfect { background: #dcfce7; color: #166534; }
+.review-result.partial { background: #fef9c3; color: #854d0e; }
+.review-result.wrong   { background: #fee2e2; color: #991b1b; }
+
+.review-passage {
+  margin: 0 16px 12px;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  font-style: italic;
+  border-left: 4px solid currentColor;
+}
+.review-parts { padding: 0 16px 4px; }
+.review-part {
+  border-top: 1px solid #f0f0f0;
+  padding: 12px 0;
+}
+.review-part-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #444;
+  margin-bottom: 8px;
+}
+.part-icon {
+  background: #1a1a2e;
+  color: #fff;
+  border-radius: 6px;
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 800; flex-shrink: 0;
+}
+.review-answer-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.ans-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.ans-label { font-size: 0.75rem; font-weight: 700; color: #888; min-width: 52px; text-transform: uppercase; }
+.ans-text { color: #222; }
+.ans-text.correct-text { color: #166534; font-weight: 600; }
+.ans-text.wrong-text   { color: #991b1b; text-decoration: line-through; }
+
+.review-explain {
+  margin: 8px 16px 14px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #444;
+  border-left: 3px solid #e0b84e;
+}
+.review-explain strong { color: #1a1a2e; }
+
+/* ════════════════════════════════
    UTILITY
 ════════════════════════════════ */
 .sr-only {
@@ -582,10 +753,24 @@ input::placeholder { color: rgba(255,255,255,.35); }
     <p class="welcome-sub">AI Symposium &nbsp;•&nbsp; Table 3</p>
 
     <div class="info-box" role="note">
-      <p>Each question has a short passage with <strong>one hallucination</strong> hidden inside.</p>
-      <p>Identify <strong>what's wrong</strong> and <strong>what type</strong> of hallucination it is.</p>
-      <p><strong>10 questions &nbsp;•&nbsp; 20 points total &nbsp;•&nbsp; Top score wins! 🏆</strong></p>
+      <p>Each question has a short passage with <strong>one hallucination</strong> hidden inside. For each one, identify:</p>
+      <p>❶ <strong>What is wrong</strong> in the passage &nbsp; ❷ <strong>What type</strong> of hallucination it is</p>
+      <p style="margin-top:10px;color:rgba(255,255,255,.5);font-size:.85rem;line-height:1.5">
+        💡 <em>You may use AI, Google, or any resource — but fair warning: some hallucinations are designed to fool them too.</em>
+      </p>
     </div>
+
+    <div class="type-guide" role="note" aria-label="Hallucination types guide">
+      <div class="type-guide-title">6 Hallucination Types You'll See</div>
+      <div class="type-row"><span class="type-dot" style="background:#1565C0"></span><span><strong>Objective Fact Error</strong> — wrong date, name, number, or place</span></div>
+      <div class="type-row"><span class="type-dot" style="background:#B74600"></span><span><strong>Misattributed Quote</strong> — real person, invented words</span></div>
+      <div class="type-row"><span class="type-dot" style="background:#6A1B9A"></span><span><strong>Invented Backstory</strong> — plausible but unverifiable private detail</span></div>
+      <div class="type-row"><span class="type-dot" style="background:#1B5E20"></span><span><strong>Misleading Connection</strong> — real facts, wrongly linked</span></div>
+      <div class="type-row"><span class="type-dot" style="background:#880E4F"></span><span><strong>False Academic Info</strong> — fake study, citation, or statistic</span></div>
+      <div class="type-row"><span class="type-dot" style="background:#BF360C"></span><span><strong>Unfounded Fabrication</strong> — made-up claim with no basis</span></div>
+    </div>
+
+    <p class="score-line">10 questions &nbsp;•&nbsp; 20 points total &nbsp;•&nbsp; Top score wins! 🏆</p>
 
     <label for="inp-name">Your Name</label>
     <input type="text" id="inp-name" placeholder="e.g. Jane Smith"
@@ -631,7 +816,19 @@ input::placeholder { color: rgba(255,255,255,.35); }
       Submit to Leaderboard 🏆
     </button>
     <p class="submit-msg" id="submit-msg" aria-live="polite"></p>
+    <button class="btn-review" id="btn-review" onclick="showReview()" style="display:none">
+      Review My Answers 📖
+    </button>
   </div>
+</div>
+
+<!-- ══════════ REVIEW ══════════ -->
+<div id="screen-review" class="screen" role="main" aria-label="Answer Review">
+  <header class="review-header">
+    <button class="btn-back" onclick="showScreen('results')" aria-label="Back to results">← Results</button>
+    <span class="review-header-title">Answer Review</span>
+  </header>
+  <div class="review-body" id="review-body"></div>
 </div>
 
 <!-- ══════════ DISPLAY (Leaderboard) ══════════ -->
@@ -1083,11 +1280,93 @@ function submitScore() {
     state.submitted = true;
     btn.textContent = "✓ Submitted!";
     msg.textContent = "You're on the leaderboard! 🎉";
+    document.getElementById("btn-review").style.display = "block";
   }).catch(() => {
     btn.disabled = false;
     btn.textContent = "Submit to Leaderboard 🏆";
     msg.textContent = "⚠️ Connection failed. Check WiFi and try again.";
+    document.getElementById("btn-review").style.display = "block"; // still allow review
   });
+}
+
+// ══════════════════════════════════════════════════════
+//  REVIEW
+// ══════════════════════════════════════════════════════
+function showReview() {
+  renderReview();
+  showScreen("review");
+}
+
+function renderReview() {
+  const body = document.getElementById("review-body");
+  body.innerHTML = questions.map(q => {
+    const sec   = SEC[q.section];
+    const saved = state.answers[q.id] || {};
+    const gotW  = saved.w === q.cw;
+    const gotT  = saved.t === q.ct;
+    const pts   = (gotW ? 1 : 0) + (gotT ? 1 : 0);
+    const resultCls  = pts === 2 ? "perfect" : pts === 1 ? "partial" : "wrong";
+    const resultText = pts === 2 ? "✓ 2/2" : pts === 1 ? "△ 1/2" : "✗ 0/2";
+
+    // What's wrong answers
+    const userWOpt    = q.wOpts.find(o => o.k === saved.w);
+    const correctWOpt = q.wOpts.find(o => o.k === q.cw);
+    // Type answers
+    const userTOpt    = q.tOpts.find(o => o.k === saved.t);
+    const correctTOpt = q.tOpts.find(o => o.k === q.ct);
+
+    return `
+      <div class="review-card">
+        <div class="review-card-header" style="background:${sec.bg}">
+          <span class="review-qnum" style="color:${sec.color}">Q${q.id} &nbsp; ${sec.emoji} ${q.section}</span>
+          <span class="review-result ${resultCls}">${resultText}</span>
+        </div>
+
+        <div class="review-passage" style="background:${sec.bg}; border-color:${sec.color}; color:#222">
+          ${q.passage}
+        </div>
+
+        <div class="review-parts">
+          <div class="review-part">
+            <div class="review-part-label">
+              <span class="part-icon">1</span>
+              What is wrong?
+              <span style="margin-left:auto;font-size:1.1rem">${gotW ? "✅" : "❌"}</span>
+            </div>
+            ${!gotW && userWOpt ? `
+              <div class="review-answer-row">
+                <span class="ans-label">Your answer</span>
+                <span class="ans-text wrong-text">${userWOpt.k}. ${userWOpt.t}</span>
+              </div>` : ""}
+            <div class="review-answer-row">
+              <span class="ans-label">${gotW ? "Your answer" : "Correct"}</span>
+              <span class="ans-text correct-text">✓ ${correctWOpt.k}. ${correctWOpt.t}</span>
+            </div>
+          </div>
+
+          <div class="review-part">
+            <div class="review-part-label">
+              <span class="part-icon">2</span>
+              What type?
+              <span style="margin-left:auto;font-size:1.1rem">${gotT ? "✅" : "❌"}</span>
+            </div>
+            ${!gotT && userTOpt ? `
+              <div class="review-answer-row">
+                <span class="ans-label">Your answer</span>
+                <span class="ans-text wrong-text">${userTOpt.k}. ${userTOpt.t}</span>
+              </div>` : ""}
+            <div class="review-answer-row">
+              <span class="ans-label">${gotT ? "Your answer" : "Correct"}</span>
+              <span class="ans-text correct-text">✓ ${correctTOpt.k}. ${correctTOpt.t}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-explain">
+          <strong>Why it's a hallucination:</strong> ${q.explain}
+        </div>
+      </div>`;
+  }).join("") + `<div style="height:24px"></div>`;
 }
 
 // ══════════════════════════════════════════════════════
